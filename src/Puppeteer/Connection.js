@@ -1,3 +1,4 @@
+"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -34,6 +35,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+Object.defineProperty(exports, "__esModule", { value: true });
+var WorldSelection = require("./Logic/WoldSelection");
 var puppeteerExtra = require('puppeteer-extra');
 var Stealth = require('puppeteer-extra-plugin-stealth');
 var fs = require('fs').promises;
@@ -48,7 +51,7 @@ var Connection = /** @class */ (function () {
     }
     Connection.prototype.connector = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var browser, page, error_1, textSelector, fullTitle;
+            var browser, page, worldSelection, error_1, textSelector, fullTitle;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, puppeteerExtra.launch({
@@ -62,22 +65,22 @@ var Connection = /** @class */ (function () {
                         return [4 /*yield*/, page.setViewport({ width: 1200, height: 720 })];
                     case 3:
                         _a.sent();
-                        return [4 /*yield*/, page.goto(this.url, { waitUntil: 'networkidle0' })];
+                        _a.label = 4;
                     case 4:
-                        _a.sent();
-                        return [4 /*yield*/, this.session(page)];
+                        _a.trys.push([4, 7, , 13]);
+                        return [4 /*yield*/, this.loadSession(page)];
                     case 5:
                         _a.sent();
-                        _a.label = 6;
+                        worldSelection = new WorldSelection(this);
+                        return [4 /*yield*/, worldSelection.getRelatedFunc(page)];
                     case 6:
-                        _a.trys.push([6, 8, , 13]);
-                        return [4 /*yield*/, this.readFile(page)];
-                    case 7:
                         _a.sent();
                         return [3 /*break*/, 13];
-                    case 8:
+                    case 7:
                         error_1 = _a.sent();
-                        console.log('Session could not be loaded. Logging in...');
+                        return [4 /*yield*/, page.goto(this.url, { waitUntil: 'networkidle0' })];
+                    case 8:
+                        _a.sent();
                         return [4 /*yield*/, this.inputUserCredentials(page)];
                     case 9:
                         _a.sent();
@@ -87,37 +90,47 @@ var Connection = /** @class */ (function () {
                         return [4 /*yield*/, page.waitForNavigation({ waitUntil: 'networkidle0', timeout: 5000 })];
                     case 11:
                         _a.sent();
-                        // Save the session for future use
-                        return [4 /*yield*/, this.session(page)];
+                        return [4 /*yield*/, this.saveSession(page)];
                     case 12:
-                        // Save the session for future use
                         _a.sent();
                         return [3 /*break*/, 13];
-                    case 13: return [4 /*yield*/, page.waitForSelector('.world_button_active')];
+                    case 13: return [4 /*yield*/, this.getWorld(page)];
                     case 14:
                         _a.sent();
-                        return [4 /*yield*/, page.click('.world_button_active')];
-                    case 15:
-                        _a.sent();
-                        return [4 /*yield*/, page.waitForNavigation({ waitUntil: 'networkidle0' })];
-                    case 16:
-                        _a.sent();
                         return [4 /*yield*/, page.waitForSelector('text/Customize and automate')];
-                    case 17:
+                    case 15:
                         textSelector = _a.sent();
                         return [4 /*yield*/, (textSelector === null || textSelector === void 0 ? void 0 : textSelector.evaluate(function (el) { return el.textContent; }))];
-                    case 18:
+                    case 16:
                         fullTitle = _a.sent();
                         console.log('The title of this blog post is "%s".', fullTitle);
                         return [4 /*yield*/, browser.close()];
-                    case 19:
+                    case 17:
                         _a.sent();
                         return [2 /*return*/];
                 }
             });
         });
     };
-    Connection.prototype.session = function (page) {
+    Connection.prototype.getWorld = function (page) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, page.waitForSelector('.world_button_active')];
+                    case 1:
+                        _a.sent();
+                        return [4 /*yield*/, page.click('.world_button_active')];
+                    case 2:
+                        _a.sent();
+                        return [4 /*yield*/, page.waitForNavigation({ waitUntil: 'networkidle0' })];
+                    case 3:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    Connection.prototype.saveSession = function (page) {
         return __awaiter(this, void 0, void 0, function () {
             var cookies, _a, _b, sessionStorage, localStorage;
             return __generator(this, function (_c) {
@@ -133,13 +146,13 @@ var Connection = /** @class */ (function () {
                         return [4 /*yield*/, page.evaluate(function () { return JSON.stringify(localStorage); })];
                     case 3:
                         localStorage = _c.sent();
-                        return [4 /*yield*/, fs.writeFile("./cookies.json", cookies)];
+                        return [4 /*yield*/, fs.writeFile('./cookies.json', cookies)];
                     case 4:
                         _c.sent();
-                        return [4 /*yield*/, fs.writeFile("./sessionStorage.json", sessionStorage)];
+                        return [4 /*yield*/, fs.writeFile('./sessionStorage.json', sessionStorage)];
                     case 5:
                         _c.sent();
-                        return [4 /*yield*/, fs.writeFile("./localStorage.json", localStorage)];
+                        return [4 /*yield*/, fs.writeFile('./localStorage.json', localStorage)];
                     case 6:
                         _c.sent();
                         return [2 /*return*/];
@@ -147,10 +160,9 @@ var Connection = /** @class */ (function () {
             });
         });
     };
-    ;
-    Connection.prototype.readFile = function (page) {
+    Connection.prototype.loadSession = function (page) {
         return __awaiter(this, void 0, void 0, function () {
-            var cookiesString, cookies;
+            var cookiesString, cookies, sessionStorageString, localStorageString;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, fs.readFile('./cookies.json', 'utf-8')];
@@ -159,6 +171,30 @@ var Connection = /** @class */ (function () {
                         cookies = JSON.parse(cookiesString);
                         return [4 /*yield*/, page.setCookie.apply(page, cookies)];
                     case 2:
+                        _a.sent();
+                        return [4 /*yield*/, fs.readFile('./sessionStorage.json', 'utf-8')];
+                    case 3:
+                        sessionStorageString = _a.sent();
+                        return [4 /*yield*/, page.evaluate(function (sessionStorageString) {
+                                sessionStorage.clear();
+                                var data = JSON.parse(sessionStorageString);
+                                for (var key in data) {
+                                    sessionStorage.setItem(key, data[key]);
+                                }
+                            }, sessionStorageString)];
+                    case 4:
+                        _a.sent();
+                        return [4 /*yield*/, fs.readFile('./localStorage.json', 'utf-8')];
+                    case 5:
+                        localStorageString = _a.sent();
+                        return [4 /*yield*/, page.evaluate(function (localStorageString) {
+                                localStorage.clear();
+                                var data = JSON.parse(localStorageString);
+                                for (var key in data) {
+                                    localStorage.setItem(key, data[key]);
+                                }
+                            }, localStorageString)];
+                    case 6:
                         _a.sent();
                         return [2 /*return*/];
                 }
@@ -203,5 +239,4 @@ var Connection = /** @class */ (function () {
     };
     return Connection;
 }());
-var connection = new Connection('https://www.klanlar.org/', 'username', 'lordFatih', 'password', '1234567890');
-connection.connector();
+exports.default = Connection;

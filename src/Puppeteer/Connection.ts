@@ -1,9 +1,11 @@
+const WorldSelection = require("./Logic/WoldSelection");
 const puppeteerExtra = require('puppeteer-extra');
 const Stealth = require('puppeteer-extra-plugin-stealth');
 const fs = require('fs').promises;
+
 puppeteerExtra.use(Stealth());
 
-class Connection {
+export default class Connection {
   protected url: string;
   protected userType: string;
   protected userName: string;
@@ -25,16 +27,22 @@ class Connection {
 
     const page = await browser.newPage();
     await page.setViewport({ width: 1200, height: 720 });
-    await page.goto(this.url, { waitUntil: 'networkidle0' });
-    await this.session(page);
-    await this.inputUserCredentials(page);
-    await this.clickLoginButton(page);
-    await page.waitForNavigation({ waitUntil: 'networkidle0', timeout: 5000 });
 
-    await page.waitForSelector('.world_button_active');
-    await page.click('.world_button_active');
-    await page.waitForNavigation({ waitUntil: 'networkidle0' });
+    try {
+      await this.loadSession(page);
+      const worldSelection = new WorldSelection(this);
+      await worldSelection.getRelatedFunc(page);
 
+    } catch (error) {
+
+      await page.goto(this.url, { waitUntil: 'networkidle0' });
+
+      await this.inputUserCredentials(page);
+      await this.clickLoginButton(page);
+      await page.waitForNavigation({ waitUntil: 'networkidle0', timeout: 5000 });
+      await this.saveSession(page);
+    }
+    await this.getWorld(page)
     const textSelector = await page.waitForSelector('text/Customize and automate');
     const fullTitle = await textSelector?.evaluate((el) => el.textContent);
     console.log('The title of this blog post is "%s".', fullTitle);
@@ -42,17 +50,46 @@ class Connection {
     await browser.close();
   }
 
-  private async session(page: any){
-  const cookies = JSON.stringify(await page.cookies());
-  const sessionStorage = await page.evaluate(() =>JSON.stringify(sessionStorage));
-  const localStorage = await page.evaluate(() => JSON.stringify(localStorage));
+  private async getWorld(page: any) {
+    await page.waitForSelector('.world_button_active');
+    await page.click('.world_button_active');
+    await page.waitForNavigation({ waitUntil: 'networkidle0' });
+  }
 
-  await fs.writeFile("./cookies.json", cookies);
-  await fs.writeFile("./sessionStorage.json", sessionStorage);
-  await fs.writeFile("./localStorage.json", localStorage);
+  private async saveSession(page: any) {
+    const cookies = JSON.stringify(await page.cookies());
+    const sessionStorage = await page.evaluate(() => JSON.stringify(sessionStorage));
+    const localStorage = await page.evaluate(() => JSON.stringify(localStorage));
+    await fs.writeFile('./cookies.json', cookies);
+    await fs.writeFile('./sessionStorage.json', sessionStorage);
+    await fs.writeFile('./localStorage.json', localStorage);
+  }
+
+  private async loadSession(page) {
+    const cookiesString = await fs.readFile('./cookies.json', 'utf-8');
+    const cookies = JSON.parse(cookiesString);
+
+    await page.setCookie(...cookies);
+
+    const sessionStorageString = await fs.readFile('./sessionStorage.json', 'utf-8');
+    await page.evaluate((sessionStorageString) => {
+      sessionStorage.clear();
+      const data = JSON.parse(sessionStorageString);
+      for (const key in data) {
+        sessionStorage.setItem(key, data[key]);
+      }
+    }, sessionStorageString);
+    const localStorageString = await fs.readFile('./localStorage.json', 'utf-8');
+    await page.evaluate((localStorageString) => {
+      localStorage.clear();
+      const data = JSON.parse(localStorageString);
+      for (const key in data) {
+        localStorage.setItem(key, data[key]);
+      }
+    }, localStorageString);
 
 
-};
+  }
 
   private async inputUserCredentials(page) {
     await page.waitForSelector(`input[name='${this.userType}']`);
@@ -67,5 +104,3 @@ class Connection {
     await page.click('.btn-login');
   }
 }
-
-
