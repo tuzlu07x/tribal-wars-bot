@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var WorldSelection = require("./Logic/WoldSelection");
+var WoldSelection_1 = require("./Logic/WoldSelection");
 var puppeteerExtra = require('puppeteer-extra');
 var Stealth = require('puppeteer-extra-plugin-stealth');
 var fs = require('fs').promises;
@@ -51,7 +51,7 @@ var Connection = /** @class */ (function () {
     }
     Connection.prototype.connector = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var browser, page, worldSelection, error_1, textSelector, fullTitle;
+            var browser, page, worldSelection_1, error_1, worldSelection, textSelector, fullTitle;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, puppeteerExtra.launch({
@@ -71,8 +71,8 @@ var Connection = /** @class */ (function () {
                         return [4 /*yield*/, this.loadSession(page)];
                     case 5:
                         _a.sent();
-                        worldSelection = new WorldSelection(this);
-                        return [4 /*yield*/, worldSelection.getRelatedFunc(page)];
+                        worldSelection_1 = new WoldSelection_1.default(this);
+                        return [4 /*yield*/, worldSelection_1.getRelatedFunc(page)];
                     case 6:
                         _a.sent();
                         return [3 /*break*/, 13];
@@ -94,7 +94,9 @@ var Connection = /** @class */ (function () {
                     case 12:
                         _a.sent();
                         return [3 /*break*/, 13];
-                    case 13: return [4 /*yield*/, this.getWorld(page)];
+                    case 13:
+                        worldSelection = new WoldSelection_1.default(this);
+                        return [4 /*yield*/, worldSelection.getRelatedFunc(page)];
                     case 14:
                         _a.sent();
                         return [4 /*yield*/, page.waitForSelector('text/Customize and automate')];
@@ -106,24 +108,6 @@ var Connection = /** @class */ (function () {
                         console.log('The title of this blog post is "%s".', fullTitle);
                         return [4 /*yield*/, browser.close()];
                     case 17:
-                        _a.sent();
-                        return [2 /*return*/];
-                }
-            });
-        });
-    };
-    Connection.prototype.getWorld = function (page) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, page.waitForSelector('.world_button_active')];
-                    case 1:
-                        _a.sent();
-                        return [4 /*yield*/, page.click('.world_button_active')];
-                    case 2:
-                        _a.sent();
-                        return [4 /*yield*/, page.waitForNavigation({ waitUntil: 'networkidle0' })];
-                    case 3:
                         _a.sent();
                         return [2 /*return*/];
                 }

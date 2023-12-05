@@ -1,4 +1,4 @@
-const WorldSelection = require("./Logic/WoldSelection");
+import WorldSelection from "./Logic/WoldSelection";
 const puppeteerExtra = require('puppeteer-extra');
 const Stealth = require('puppeteer-extra-plugin-stealth');
 const fs = require('fs').promises;
@@ -12,7 +12,13 @@ export default class Connection {
   protected passwordType: string;
   protected password: string;
 
-  constructor(url: string, userType: string, userName: string, passwordType: string, password: string) {
+  constructor(
+    url: string,
+    userType: string,
+    userName: string,
+    passwordType: string,
+    password: string
+  ) {
     this.url = url;
     this.userType = userType;
     this.userName = userName;
@@ -42,18 +48,14 @@ export default class Connection {
       await page.waitForNavigation({ waitUntil: 'networkidle0', timeout: 5000 });
       await this.saveSession(page);
     }
-    await this.getWorld(page)
+    const worldSelection = new WorldSelection(this);
+    await worldSelection.getRelatedFunc(page);
+
     const textSelector = await page.waitForSelector('text/Customize and automate');
     const fullTitle = await textSelector?.evaluate((el) => el.textContent);
     console.log('The title of this blog post is "%s".', fullTitle);
 
     await browser.close();
-  }
-
-  private async getWorld(page: any) {
-    await page.waitForSelector('.world_button_active');
-    await page.click('.world_button_active');
-    await page.waitForNavigation({ waitUntil: 'networkidle0' });
   }
 
   private async saveSession(page: any) {
