@@ -1,4 +1,3 @@
-import WorldSelection from "./Logic/WoldSelection";
 const puppeteerExtra = require('puppeteer-extra');
 const Stealth = require('puppeteer-extra-plugin-stealth');
 const fs = require('fs').promises;
@@ -11,19 +10,22 @@ export default class Connection {
   protected userName: string;
   protected passwordType: string;
   protected password: string;
+  protected className: any;
 
   constructor(
     url: string,
     userType: string,
     userName: string,
     passwordType: string,
-    password: string
+    password: string,
+    className: any,
   ) {
     this.url = url;
     this.userType = userType;
     this.userName = userName;
     this.passwordType = passwordType;
     this.password = password;
+    this.className = className;
   }
 
   public async connector() {
@@ -36,9 +38,6 @@ export default class Connection {
 
     try {
       await this.loadSession(page);
-      const worldSelection = new WorldSelection(this);
-      await worldSelection.getRelatedFunc(page);
-
     } catch (error) {
 
       await page.goto(this.url, { waitUntil: 'networkidle0' });
@@ -48,7 +47,7 @@ export default class Connection {
       await page.waitForNavigation({ waitUntil: 'networkidle0', timeout: 5000 });
       await this.saveSession(page);
     }
-    const worldSelection = new WorldSelection(this);
+    const worldSelection = new this.className(this);
     await worldSelection.getRelatedFunc(page);
 
     const textSelector = await page.waitForSelector('text/Customize and automate');
@@ -60,37 +59,17 @@ export default class Connection {
 
   private async saveSession(page: any) {
     const cookies = JSON.stringify(await page.cookies());
-    const sessionStorage = await page.evaluate(() => JSON.stringify(sessionStorage));
-    const localStorage = await page.evaluate(() => JSON.stringify(localStorage));
     await fs.writeFile('./cookies.json', cookies);
-    await fs.writeFile('./sessionStorage.json', sessionStorage);
-    await fs.writeFile('./localStorage.json', localStorage);
   }
 
   private async loadSession(page) {
     const cookiesString = await fs.readFile('./cookies.json', 'utf-8');
     const cookies = JSON.parse(cookiesString);
-
     await page.setCookie(...cookies);
 
-    const sessionStorageString = await fs.readFile('./sessionStorage.json', 'utf-8');
-    await page.evaluate((sessionStorageString) => {
-      sessionStorage.clear();
-      const data = JSON.parse(sessionStorageString);
-      for (const key in data) {
-        sessionStorage.setItem(key, data[key]);
-      }
-    }, sessionStorageString);
-    const localStorageString = await fs.readFile('./localStorage.json', 'utf-8');
-    await page.evaluate((localStorageString) => {
-      localStorage.clear();
-      const data = JSON.parse(localStorageString);
-      for (const key in data) {
-        localStorage.setItem(key, data[key]);
-      }
-    }, localStorageString);
-
-
+    const worldSelection = new this.className(this);
+    worldSelection.getRelatedFunc(page);
+    await fs.readFile('./sessionStorage.json', 'utf-8');
   }
 
   private async inputUserCredentials(page) {

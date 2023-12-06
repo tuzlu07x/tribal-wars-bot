@@ -36,22 +36,22 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var WoldSelection_1 = require("./Logic/WoldSelection");
 var puppeteerExtra = require('puppeteer-extra');
 var Stealth = require('puppeteer-extra-plugin-stealth');
 var fs = require('fs').promises;
 puppeteerExtra.use(Stealth());
 var Connection = /** @class */ (function () {
-    function Connection(url, userType, userName, passwordType, password) {
+    function Connection(url, userType, userName, passwordType, password, className) {
         this.url = url;
         this.userType = userType;
         this.userName = userName;
         this.passwordType = passwordType;
         this.password = password;
+        this.className = className;
     }
     Connection.prototype.connector = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var browser, page, worldSelection_1, error_1, worldSelection, textSelector, fullTitle;
+            var browser, page, error_1, worldSelection, textSelector, fullTitle;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, puppeteerExtra.launch({
@@ -67,47 +67,43 @@ var Connection = /** @class */ (function () {
                         _a.sent();
                         _a.label = 4;
                     case 4:
-                        _a.trys.push([4, 7, , 13]);
+                        _a.trys.push([4, 6, , 12]);
                         return [4 /*yield*/, this.loadSession(page)];
                     case 5:
                         _a.sent();
-                        worldSelection_1 = new WoldSelection_1.default(this);
-                        return [4 /*yield*/, worldSelection_1.getRelatedFunc(page)];
+                        return [3 /*break*/, 12];
                     case 6:
-                        _a.sent();
-                        return [3 /*break*/, 13];
-                    case 7:
                         error_1 = _a.sent();
                         return [4 /*yield*/, page.goto(this.url, { waitUntil: 'networkidle0' })];
-                    case 8:
+                    case 7:
                         _a.sent();
                         return [4 /*yield*/, this.inputUserCredentials(page)];
-                    case 9:
+                    case 8:
                         _a.sent();
                         return [4 /*yield*/, this.clickLoginButton(page)];
-                    case 10:
+                    case 9:
                         _a.sent();
                         return [4 /*yield*/, page.waitForNavigation({ waitUntil: 'networkidle0', timeout: 5000 })];
-                    case 11:
+                    case 10:
                         _a.sent();
                         return [4 /*yield*/, this.saveSession(page)];
-                    case 12:
+                    case 11:
                         _a.sent();
-                        return [3 /*break*/, 13];
-                    case 13:
-                        worldSelection = new WoldSelection_1.default(this);
+                        return [3 /*break*/, 12];
+                    case 12:
+                        worldSelection = new this.className(this);
                         return [4 /*yield*/, worldSelection.getRelatedFunc(page)];
-                    case 14:
+                    case 13:
                         _a.sent();
                         return [4 /*yield*/, page.waitForSelector('text/Customize and automate')];
-                    case 15:
+                    case 14:
                         textSelector = _a.sent();
                         return [4 /*yield*/, (textSelector === null || textSelector === void 0 ? void 0 : textSelector.evaluate(function (el) { return el.textContent; }))];
-                    case 16:
+                    case 15:
                         fullTitle = _a.sent();
                         console.log('The title of this blog post is "%s".', fullTitle);
                         return [4 /*yield*/, browser.close()];
-                    case 17:
+                    case 16:
                         _a.sent();
                         return [2 /*return*/];
                 }
@@ -116,7 +112,7 @@ var Connection = /** @class */ (function () {
     };
     Connection.prototype.saveSession = function (page) {
         return __awaiter(this, void 0, void 0, function () {
-            var cookies, _a, _b, sessionStorage, localStorage;
+            var cookies, _a, _b;
             return __generator(this, function (_c) {
                 switch (_c.label) {
                     case 0:
@@ -124,20 +120,8 @@ var Connection = /** @class */ (function () {
                         return [4 /*yield*/, page.cookies()];
                     case 1:
                         cookies = _b.apply(_a, [_c.sent()]);
-                        return [4 /*yield*/, page.evaluate(function () { return JSON.stringify(sessionStorage); })];
-                    case 2:
-                        sessionStorage = _c.sent();
-                        return [4 /*yield*/, page.evaluate(function () { return JSON.stringify(localStorage); })];
-                    case 3:
-                        localStorage = _c.sent();
                         return [4 /*yield*/, fs.writeFile('./cookies.json', cookies)];
-                    case 4:
-                        _c.sent();
-                        return [4 /*yield*/, fs.writeFile('./sessionStorage.json', sessionStorage)];
-                    case 5:
-                        _c.sent();
-                        return [4 /*yield*/, fs.writeFile('./localStorage.json', localStorage)];
-                    case 6:
+                    case 2:
                         _c.sent();
                         return [2 /*return*/];
                 }
@@ -146,39 +130,24 @@ var Connection = /** @class */ (function () {
     };
     Connection.prototype.loadSession = function (page) {
         return __awaiter(this, void 0, void 0, function () {
-            var cookiesString, cookies, sessionStorageString, localStorageString;
+            var cookiesString, cookies, worldSelection;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, fs.readFile('./cookies.json', 'utf-8')];
+                    case 0:
+                        console.log('1');
+                        return [4 /*yield*/, fs.readFile('./cookies.json', 'utf-8')];
                     case 1:
                         cookiesString = _a.sent();
+                        console.log('2');
                         cookies = JSON.parse(cookiesString);
+                        console.log('3');
                         return [4 /*yield*/, page.setCookie.apply(page, cookies)];
                     case 2:
                         _a.sent();
+                        worldSelection = new this.className(this);
+                        worldSelection.getRelatedFunc(page);
                         return [4 /*yield*/, fs.readFile('./sessionStorage.json', 'utf-8')];
                     case 3:
-                        sessionStorageString = _a.sent();
-                        return [4 /*yield*/, page.evaluate(function (sessionStorageString) {
-                                sessionStorage.clear();
-                                var data = JSON.parse(sessionStorageString);
-                                for (var key in data) {
-                                    sessionStorage.setItem(key, data[key]);
-                                }
-                            }, sessionStorageString)];
-                    case 4:
-                        _a.sent();
-                        return [4 /*yield*/, fs.readFile('./localStorage.json', 'utf-8')];
-                    case 5:
-                        localStorageString = _a.sent();
-                        return [4 /*yield*/, page.evaluate(function (localStorageString) {
-                                localStorage.clear();
-                                var data = JSON.parse(localStorageString);
-                                for (var key in data) {
-                                    localStorage.setItem(key, data[key]);
-                                }
-                            }, localStorageString)];
-                    case 6:
                         _a.sent();
                         return [2 /*return*/];
                 }
