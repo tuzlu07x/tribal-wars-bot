@@ -36,26 +36,25 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var LoginForm_1 = require("./Logic/LoginForm");
 var puppeteerExtra = require('puppeteer-extra');
 var Stealth = require('puppeteer-extra-plugin-stealth');
-var fs = require('fs').promises;
 puppeteerExtra.use(Stealth());
 var Connection = /** @class */ (function () {
-    function Connection(url, userType, userName, passwordType, password, className) {
+    function Connection(url, userType, userName, passwordType, password) {
         this.url = url;
         this.userType = userType;
         this.userName = userName;
         this.passwordType = passwordType;
         this.password = password;
-        this.className = className;
     }
     Connection.prototype.connector = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var browser, page, error_1, worldSelection, textSelector, fullTitle;
+            var browser, page, loginForm, textSelector, fullTitle;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, puppeteerExtra.launch({
-                            headless: false,
+                            headless: false
                         })];
                     case 1:
                         browser = _a.sent();
@@ -65,125 +64,19 @@ var Connection = /** @class */ (function () {
                         return [4 /*yield*/, page.setViewport({ width: 1200, height: 720 })];
                     case 3:
                         _a.sent();
-                        _a.label = 4;
+                        loginForm = new LoginForm_1.default(this, this.url, browser, page);
+                        return [4 /*yield*/, loginForm.getRelatedFunc()];
                     case 4:
-                        _a.trys.push([4, 6, , 12]);
-                        return [4 /*yield*/, this.loadSession(page)];
-                    case 5:
-                        _a.sent();
-                        return [3 /*break*/, 12];
-                    case 6:
-                        error_1 = _a.sent();
-                        return [4 /*yield*/, page.goto(this.url, { waitUntil: 'networkidle0' })];
-                    case 7:
-                        _a.sent();
-                        return [4 /*yield*/, this.inputUserCredentials(page)];
-                    case 8:
-                        _a.sent();
-                        return [4 /*yield*/, this.clickLoginButton(page)];
-                    case 9:
-                        _a.sent();
-                        return [4 /*yield*/, page.waitForNavigation({ waitUntil: 'networkidle0', timeout: 5000 })];
-                    case 10:
-                        _a.sent();
-                        return [4 /*yield*/, this.saveSession(page)];
-                    case 11:
-                        _a.sent();
-                        return [3 /*break*/, 12];
-                    case 12:
-                        worldSelection = new this.className(this);
-                        return [4 /*yield*/, worldSelection.getRelatedFunc(page)];
-                    case 13:
                         _a.sent();
                         return [4 /*yield*/, page.waitForSelector('text/Customize and automate')];
-                    case 14:
+                    case 5:
                         textSelector = _a.sent();
                         return [4 /*yield*/, (textSelector === null || textSelector === void 0 ? void 0 : textSelector.evaluate(function (el) { return el.textContent; }))];
-                    case 15:
+                    case 6:
                         fullTitle = _a.sent();
                         console.log('The title of this blog post is "%s".', fullTitle);
                         return [4 /*yield*/, browser.close()];
-                    case 16:
-                        _a.sent();
-                        return [2 /*return*/];
-                }
-            });
-        });
-    };
-    Connection.prototype.saveSession = function (page) {
-        return __awaiter(this, void 0, void 0, function () {
-            var cookies, _a, _b;
-            return __generator(this, function (_c) {
-                switch (_c.label) {
-                    case 0:
-                        _b = (_a = JSON).stringify;
-                        return [4 /*yield*/, page.cookies()];
-                    case 1:
-                        cookies = _b.apply(_a, [_c.sent()]);
-                        return [4 /*yield*/, fs.writeFile('./cookies.json', cookies)];
-                    case 2:
-                        _c.sent();
-                        return [2 /*return*/];
-                }
-            });
-        });
-    };
-    Connection.prototype.loadSession = function (page) {
-        return __awaiter(this, void 0, void 0, function () {
-            var cookiesString, cookies, worldSelection;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        console.log('1');
-                        return [4 /*yield*/, fs.readFile('./cookies.json', 'utf-8')];
-                    case 1:
-                        cookiesString = _a.sent();
-                        console.log('2');
-                        cookies = JSON.parse(cookiesString);
-                        console.log('3');
-                        return [4 /*yield*/, page.setCookie.apply(page, cookies)];
-                    case 2:
-                        _a.sent();
-                        worldSelection = new this.className(this);
-                        worldSelection.getRelatedFunc(page);
-                        return [4 /*yield*/, fs.readFile('./sessionStorage.json', 'utf-8')];
-                    case 3:
-                        _a.sent();
-                        return [2 /*return*/];
-                }
-            });
-        });
-    };
-    Connection.prototype.inputUserCredentials = function (page) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, page.waitForSelector("input[name='".concat(this.userType, "']"))];
-                    case 1:
-                        _a.sent();
-                        return [4 /*yield*/, page.type("input[name='".concat(this.userType, "']"), this.userName)];
-                    case 2:
-                        _a.sent();
-                        return [4 /*yield*/, page.waitForSelector("input[name='".concat(this.passwordType, "']"))];
-                    case 3:
-                        _a.sent();
-                        return [4 /*yield*/, page.type("input[name='".concat(this.passwordType, "']"), this.password)];
-                    case 4:
-                        _a.sent();
-                        return [2 /*return*/];
-                }
-            });
-        });
-    };
-    Connection.prototype.clickLoginButton = function (page) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, page.waitForSelector('.btn-login')];
-                    case 1:
-                        _a.sent();
-                        return [4 /*yield*/, page.click('.btn-login')];
-                    case 2:
+                    case 7:
                         _a.sent();
                         return [2 /*return*/];
                 }
