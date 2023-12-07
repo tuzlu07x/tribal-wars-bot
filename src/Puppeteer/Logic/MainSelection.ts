@@ -11,9 +11,8 @@ export default class MainSelection extends BaseLogic {
     }
 
     public async getRelatedFunc(page: any): Promise<void> {
-        await page.goto(this.url, { waitUntil: 'networkidle0', timeout: 5000 });
-        console.log('3' + page.url())
 
+        await page.goto(this.url, { waitUntil: 'networkidle0', timeout: 5000 });
         await page.waitForNavigation({ waitUntil: 'networkidle0' });
     }
 }

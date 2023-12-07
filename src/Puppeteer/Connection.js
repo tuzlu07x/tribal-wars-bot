@@ -40,6 +40,9 @@ var LoginForm_1 = require("./Logic/LoginForm");
 var puppeteerExtra = require('puppeteer-extra');
 var Stealth = require('puppeteer-extra-plugin-stealth');
 puppeteerExtra.use(Stealth());
+function sleep(ms) {
+    return new Promise(function (resolve) { return setTimeout(resolve, ms); });
+}
 var Connection = /** @class */ (function () {
     function Connection(url, userType, userName, passwordType, password) {
         this.url = url;
@@ -50,34 +53,48 @@ var Connection = /** @class */ (function () {
     }
     Connection.prototype.connector = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var browser, page, loginForm, textSelector, fullTitle;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var browser, page, loginForm, _a, _b, _c, textSelector, fullTitle, error_1;
+            return __generator(this, function (_d) {
+                switch (_d.label) {
                     case 0: return [4 /*yield*/, puppeteerExtra.launch({
                             headless: false
                         })];
                     case 1:
-                        browser = _a.sent();
+                        browser = _d.sent();
                         return [4 /*yield*/, browser.newPage()];
                     case 2:
-                        page = _a.sent();
+                        page = _d.sent();
                         return [4 /*yield*/, page.setViewport({ width: 1200, height: 720 })];
                     case 3:
-                        _a.sent();
-                        loginForm = new LoginForm_1.default(this, this.url, browser, page);
-                        return [4 /*yield*/, loginForm.getRelatedFunc()];
+                        _d.sent();
+                        _d.label = 4;
                     case 4:
-                        _a.sent();
-                        return [4 /*yield*/, page.waitForSelector('text/Customize and automate')];
+                        _d.trys.push([4, 9, , 10]);
+                        loginForm = new LoginForm_1.default(this, this.url, browser, page);
+                        loginForm.getRelatedFunc();
+                        return [4 /*yield*/, sleep(10000)];
                     case 5:
-                        textSelector = _a.sent();
-                        return [4 /*yield*/, (textSelector === null || textSelector === void 0 ? void 0 : textSelector.evaluate(function (el) { return el.textContent; }))];
+                        _d.sent();
+                        _b = (_a = console).log;
+                        _c = 'after sleep ';
+                        return [4 /*yield*/, loginForm.getCurrentPage()];
                     case 6:
-                        fullTitle = _a.sent();
-                        console.log('The title of this blog post is "%s".', fullTitle);
-                        return [4 /*yield*/, browser.close()];
+                        _b.apply(_a, [_c + (_d.sent())]);
+                        return [4 /*yield*/, page.waitForSelector('text/Customize and automate')];
                     case 7:
-                        _a.sent();
+                        textSelector = _d.sent();
+                        return [4 /*yield*/, (textSelector === null || textSelector === void 0 ? void 0 : textSelector.evaluate(function (el) { return el.textContent; }))];
+                    case 8:
+                        fullTitle = _d.sent();
+                        console.log('The title of this blog post is "%s".', fullTitle);
+                        return [3 /*break*/, 10];
+                    case 9:
+                        error_1 = _d.sent();
+                        console.log(error_1);
+                        return [3 /*break*/, 10];
+                    case 10: return [4 /*yield*/, browser.close()];
+                    case 11:
+                        _d.sent();
                         return [2 /*return*/];
                 }
             });

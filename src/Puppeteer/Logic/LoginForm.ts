@@ -17,19 +17,19 @@ export default class LoginForm extends BaseLogic {
         this.page = page;
     }
 
-    public async getRelatedFunc(): Promise<void> {
+    public async getRelatedFunc() {
         try {
             await this.loadSession();
         } catch (error) {
 
-            await this.page.goto(this.url, { waitUntil: 'networkidle0', timeout: 5000 });
-            console.log('1' + this.getCurrentPage())
+            await this.page.goto(this.url, { waitUntil: 'networkidle0' });
             await this.inputUserCredentials();
             await this.clickLoginButton();
             await this.page.waitForNavigation({ waitUntil: 'networkidle0' });
             await this.saveSession();
         }
         await this.worldSelection();
+        this.getCurrentPage()
     }
 
     private async loadSession() {
@@ -37,10 +37,7 @@ export default class LoginForm extends BaseLogic {
         const cookiesString = await fs.readFile('./cookies.json', 'utf-8');
         const cookies = JSON.parse(cookiesString);
         await this.page.setCookie(...cookies);
-
-        this.worldSelection();
-
-        await fs.readFile('./sessionStorage.json', 'utf-8');
+        return this.worldSelection();
     }
 
     private async inputUserCredentials() {
@@ -65,10 +62,9 @@ export default class LoginForm extends BaseLogic {
         await this.page.waitForNavigation({ timeout: 6000, waitUntil: 'domcontentloaded' });
     }
 
-    private getCurrentPage() {
+    public getCurrentPage() {
 
         const currentUrl = this.page.url();
-
         return currentUrl
     }
 

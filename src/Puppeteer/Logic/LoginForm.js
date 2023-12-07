@@ -76,10 +76,9 @@ var LoginForm = /** @class */ (function (_super) {
                         return [3 /*break*/, 8];
                     case 2:
                         error_1 = _a.sent();
-                        return [4 /*yield*/, this.page.goto(this.url, { waitUntil: 'networkidle0', timeout: 5000 })];
+                        return [4 /*yield*/, this.page.goto(this.url, { waitUntil: 'networkidle0' })];
                     case 3:
                         _a.sent();
-                        console.log('1' + this.getCurrentPage());
                         return [4 /*yield*/, this.inputUserCredentials()];
                     case 4:
                         _a.sent();
@@ -96,6 +95,7 @@ var LoginForm = /** @class */ (function (_super) {
                     case 8: return [4 /*yield*/, this.worldSelection()];
                     case 9:
                         _a.sent();
+                        this.getCurrentPage();
                         return [2 /*return*/];
                 }
             });
@@ -114,11 +114,7 @@ var LoginForm = /** @class */ (function (_super) {
                         return [4 /*yield*/, (_a = this.page).setCookie.apply(_a, cookies)];
                     case 2:
                         _b.sent();
-                        this.worldSelection();
-                        return [4 /*yield*/, fs.readFile('./sessionStorage.json', 'utf-8')];
-                    case 3:
-                        _b.sent();
-                        return [2 /*return*/];
+                        return [2 /*return*/, this.worldSelection()];
                 }
             });
         });
