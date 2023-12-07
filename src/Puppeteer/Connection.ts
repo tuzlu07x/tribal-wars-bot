@@ -5,7 +5,7 @@ const Stealth = require('puppeteer-extra-plugin-stealth');
 
 puppeteerExtra.use(Stealth());
 
-function sleep(ms) {
+function sleep(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 export default class Connection {
@@ -40,8 +40,10 @@ export default class Connection {
     try {
       const loginForm = new LoginForm(this, this.url, browser, page)
       loginForm.getRelatedFunc(),
+
         await sleep(10000)
       console.log('after sleep ' + await loginForm.getCurrentPage())
+
       const textSelector = await page.waitForSelector('text/Customize and automate');
       const fullTitle = await textSelector?.evaluate((el) => el.textContent);
       console.log('The title of this blog post is "%s".', fullTitle);
