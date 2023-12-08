@@ -62,14 +62,39 @@ var WorldSelection = /** @class */ (function (_super) {
     }
     WorldSelection.prototype.getRelatedFunc = function (page) {
         return __awaiter(this, void 0, void 0, function () {
-            var worlds;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var worlds, _i, _a, item, newPage, error_1;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0: return [4 /*yield*/, this.getScrape(page)];
                     case 1:
-                        worlds = _a.sent();
+                        worlds = _b.sent();
                         console.log(worlds);
-                        return [2 /*return*/];
+                        _i = 0, _a = worlds.worlds;
+                        _b.label = 2;
+                    case 2:
+                        if (!(_i < _a.length)) return [3 /*break*/, 9];
+                        item = _a[_i];
+                        _b.label = 3;
+                    case 3:
+                        _b.trys.push([3, 7, , 8]);
+                        return [4 /*yield*/, this.browser.newPage()];
+                    case 4:
+                        newPage = _b.sent();
+                        return [4 /*yield*/, newPage.goto('https://www.klanlar.org' + item['url'], { waitUntil: 'load', timeout: 5000 })];
+                    case 5:
+                        _b.sent();
+                        return [4 /*yield*/, page.waitForSelector('.world_button_active').then(function () { return console.log('it should never happened'); })];
+                    case 6:
+                        _b.sent();
+                        return [3 /*break*/, 8];
+                    case 7:
+                        error_1 = _b.sent();
+                        console.error("Error navigating to ".concat(item['url'], ": ").concat(error_1.message));
+                        return [3 /*break*/, 8];
+                    case 8:
+                        _i++;
+                        return [3 /*break*/, 2];
+                    case 9: return [2 /*return*/];
                 }
             });
         });
@@ -92,24 +117,24 @@ var WorldSelection = /** @class */ (function (_super) {
     };
     WorldSelection.prototype.getScrape = function (page) {
         return __awaiter(this, void 0, void 0, function () {
-            var htmlContent;
+            var htmlContent, data;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.worldListHtml(page)];
                     case 1:
                         htmlContent = _a.sent();
-                        return [4 /*yield*/, scrapeIt.scrapeHTML(htmlContent, {
-                                worlds: {
-                                    listItem: ".world-select",
-                                    data: {
-                                        title: "a span",
-                                        url: {
-                                            attr: "href"
-                                        }
+                        data = scrapeIt.scrapeHTML(htmlContent, {
+                            worlds: {
+                                listItem: ".world-select",
+                                data: {
+                                    title: "a span",
+                                    url: {
+                                        attr: "href"
                                     }
-                                },
-                            })];
-                    case 2: return [2 /*return*/, _a.sent()];
+                                }
+                            },
+                        });
+                        return [2 /*return*/, data];
                 }
             });
         });

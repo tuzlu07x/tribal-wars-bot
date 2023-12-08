@@ -114,7 +114,7 @@ var LoginForm = /** @class */ (function (_super) {
                         return [4 /*yield*/, (_a = this.page).setCookie.apply(_a, cookies)];
                     case 2:
                         _b.sent();
-                        return [2 /*return*/, this.worldSelection()];
+                        return [2 /*return*/];
                 }
             });
         });

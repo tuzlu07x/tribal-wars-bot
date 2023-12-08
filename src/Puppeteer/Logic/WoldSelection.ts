@@ -14,8 +14,9 @@ export default class WorldSelection extends BaseLogic {
         for (const item of worlds.worlds) {
             try {
                 const newPage = await this.browser.newPage();
-                await newPage.goto('https://www.klanlar.org' + item['url'], { waitUntil: 'networkidle0', timeout: 10000 });
-                //await newPage.waitForSelector('.world_button_active');
+                await newPage.goto('https://www.klanlar.org' + item['url'], { waitUntil: 'load', timeout: 5000 });
+                await page.waitForSelector('.world_button_active').then(() => console.log('it should never happened'));
+
             } catch (error) {
                 console.error(`Error navigating to ${item['url']}: ${error.message}`);
             }

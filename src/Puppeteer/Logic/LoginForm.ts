@@ -37,7 +37,6 @@ export default class LoginForm extends BaseLogic {
         const cookiesString = await fs.readFile('./cookies.json', 'utf-8');
         const cookies = JSON.parse(cookiesString);
         await this.page.setCookie(...cookies);
-        return this.worldSelection();
     }
 
     private async inputUserCredentials() {
