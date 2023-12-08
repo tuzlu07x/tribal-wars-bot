@@ -10,5 +10,11 @@
   },
   "devDependencies": {
     "ts-node": "^10.9.1"
-  }
+  },
+  "scripts": {
+    "start": "node index.js",
+    "dev": "ts-node index.ts",
+    "build": "tsc index.ts"
+  },
+  "license": "MIT"
 }
