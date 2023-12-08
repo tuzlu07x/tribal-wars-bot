@@ -33,10 +33,10 @@ export default class LoginForm extends BaseLogic {
     }
 
     private async loadSession() {
-
         const cookiesString = await fs.readFile('./cookies.json', 'utf-8');
         const cookies = JSON.parse(cookiesString);
         await this.page.setCookie(...cookies);
+        await this.page.goto(this.url, { waitUntil: 'networkidle0' });
     }
 
     private async inputUserCredentials() {

@@ -37,7 +37,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var LoginForm_1 = require("./Logic/LoginForm");
-var MainScreen_1 = require("./Logic/MainScreen");
 var puppeteerExtra = require('puppeteer-extra');
 var Stealth = require('puppeteer-extra-plugin-stealth');
 puppeteerExtra.use(Stealth());
@@ -54,57 +53,61 @@ var Connection = /** @class */ (function () {
     }
     Connection.prototype.connector = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var browser, page, loginForm, mainScreen, _a, _b, _c, _d, _e, textSelector, fullTitle, error_1;
-            return __generator(this, function (_f) {
-                switch (_f.label) {
+            var browser, page, loginForm, _a, _b, _c, textSelector, fullTitle, error_1;
+            return __generator(this, function (_d) {
+                switch (_d.label) {
                     case 0: return [4 /*yield*/, puppeteerExtra.launch({
                             headless: false
                         })];
                     case 1:
-                        browser = _f.sent();
+                        browser = _d.sent();
                         return [4 /*yield*/, browser.newPage()];
                     case 2:
-                        page = _f.sent();
+                        page = _d.sent();
                         return [4 /*yield*/, page.setViewport({ width: 1200, height: 720 })];
                     case 3:
-                        _f.sent();
-                        _f.label = 4;
+                        _d.sent();
+                        _d.label = 4;
                     case 4:
-                        _f.trys.push([4, 11, , 12]);
+                        _d.trys.push([4, 10, , 11]);
                         loginForm = new LoginForm_1.default(this, this.url, browser, page);
                         return [4 /*yield*/, sleep(10000)];
                     case 5:
-                        _f.sent();
+                        _d.sent();
                         loginForm.getRelatedFunc();
-                        return [4 /*yield*/, sleep(10000)];
+                        return [4 /*yield*/, sleep(10000)
+                            // const mainScreen = new MainScreen(this, await loginForm.getCurrentPage())
+                            // mainScreen.getRelatedFunc(page,)
+                            // sleep(5000)
+                        ];
                     case 6:
-                        _f.sent();
-                        _a = MainScreen_1.default.bind;
-                        _b = [void 0, this];
+                        _d.sent();
+                        // const mainScreen = new MainScreen(this, await loginForm.getCurrentPage())
+                        // mainScreen.getRelatedFunc(page,)
+                        // sleep(5000)
+                        _b = (_a = console).log;
+                        _c = 'after sleep ';
                         return [4 /*yield*/, loginForm.getCurrentPage()];
                     case 7:
-                        mainScreen = new (_a.apply(MainScreen_1.default, _b.concat([_f.sent()])))();
-                        mainScreen.getRelatedFunc(page);
-                        sleep(5000);
-                        _d = (_c = console).log;
-                        _e = 'after sleep ';
-                        return [4 /*yield*/, loginForm.getCurrentPage()];
-                    case 8:
-                        _d.apply(_c, [_e + (_f.sent())]);
+                        // const mainScreen = new MainScreen(this, await loginForm.getCurrentPage())
+                        // mainScreen.getRelatedFunc(page,)
+                        // sleep(5000)
+                        _b.apply(_a, [_c + (_d.sent())]);
                         return [4 /*yield*/, page.waitForSelector('text/Customize and automate')];
-                    case 9:
-                        textSelector = _f.sent();
+                    case 8:
+                        textSelector = _d.sent();
                         return [4 /*yield*/, (textSelector === null || textSelector === void 0 ? void 0 : textSelector.evaluate(function (el) { return el.textContent; }))];
+                    case 9:
+                        fullTitle = _d.sent();
+                        console.log('The title of this blog post is "%s".', fullTitle);
+                        return [3 /*break*/, 11];
                     case 10:
-                        fullTitle = _f.sent();
-                        return [3 /*break*/, 12];
-                    case 11:
-                        error_1 = _f.sent();
+                        error_1 = _d.sent();
                         console.log(error_1);
-                        return [3 /*break*/, 12];
-                    case 12: return [4 /*yield*/, browser.close()];
-                    case 13:
-                        _f.sent();
+                        return [3 /*break*/, 11];
+                    case 11: return [4 /*yield*/, browser.close()];
+                    case 12:
+                        _d.sent();
                         return [2 /*return*/];
                 }
             });

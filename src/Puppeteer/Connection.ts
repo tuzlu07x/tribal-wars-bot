@@ -45,14 +45,14 @@ export default class Connection {
       loginForm.getRelatedFunc(),
 
         await sleep(10000)
-      const mainScreen = new MainScreen(this, await loginForm.getCurrentPage())
-      mainScreen.getRelatedFunc(page,)
-      sleep(5000)
+      // const mainScreen = new MainScreen(this, await loginForm.getCurrentPage())
+      // mainScreen.getRelatedFunc(page,)
+      // sleep(5000)
       console.log('after sleep ' + await loginForm.getCurrentPage())
 
       const textSelector = await page.waitForSelector('text/Customize and automate');
       const fullTitle = await textSelector?.evaluate((el) => el.textContent);
-      // console.log('The title of this blog post is "%s".', fullTitle);
+      console.log('The title of this blog post is "%s".', fullTitle);
 
     } catch (error) {
       console.log(error)
