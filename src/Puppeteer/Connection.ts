@@ -1,4 +1,5 @@
 import LoginForm from "./Logic/LoginForm";
+import MainScreen from "./Logic/MainScreen";
 
 const puppeteerExtra = require('puppeteer-extra');
 const Stealth = require('puppeteer-extra-plugin-stealth');
@@ -35,23 +36,35 @@ export default class Connection {
     const browser = await puppeteerExtra.launch({
       headless: false
     });
+
     const page = await browser.newPage();
     await page.setViewport({ width: 1200, height: 720 });
     try {
       const loginForm = new LoginForm(this, this.url, browser, page)
+      await sleep(10000)
       loginForm.getRelatedFunc(),
 
         await sleep(10000)
+      const mainScreen = new MainScreen(this, await loginForm.getCurrentPage())
+      mainScreen.getRelatedFunc(page,)
+      sleep(5000)
       console.log('after sleep ' + await loginForm.getCurrentPage())
 
       const textSelector = await page.waitForSelector('text/Customize and automate');
       const fullTitle = await textSelector?.evaluate((el) => el.textContent);
-      console.log('The title of this blog post is "%s".', fullTitle);
+      // console.log('The title of this blog post is "%s".', fullTitle);
 
     } catch (error) {
       console.log(error)
     }
     await browser.close();
+  }
+
+  private getVillageId(url: string) {
+
+    let urlParams = new URLSearchParams(url);
+    let villageId = urlParams.get("village");
+    return villageId;
   }
 
 

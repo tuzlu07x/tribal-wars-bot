@@ -37,6 +37,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var LoginForm_1 = require("./Logic/LoginForm");
+var MainScreen_1 = require("./Logic/MainScreen");
 var puppeteerExtra = require('puppeteer-extra');
 var Stealth = require('puppeteer-extra-plugin-stealth');
 puppeteerExtra.use(Stealth());
@@ -53,52 +54,66 @@ var Connection = /** @class */ (function () {
     }
     Connection.prototype.connector = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var browser, page, loginForm, _a, _b, _c, textSelector, fullTitle, error_1;
-            return __generator(this, function (_d) {
-                switch (_d.label) {
+            var browser, page, loginForm, mainScreen, _a, _b, _c, _d, _e, textSelector, fullTitle, error_1;
+            return __generator(this, function (_f) {
+                switch (_f.label) {
                     case 0: return [4 /*yield*/, puppeteerExtra.launch({
                             headless: false
                         })];
                     case 1:
-                        browser = _d.sent();
+                        browser = _f.sent();
                         return [4 /*yield*/, browser.newPage()];
                     case 2:
-                        page = _d.sent();
+                        page = _f.sent();
                         return [4 /*yield*/, page.setViewport({ width: 1200, height: 720 })];
                     case 3:
-                        _d.sent();
-                        _d.label = 4;
+                        _f.sent();
+                        _f.label = 4;
                     case 4:
-                        _d.trys.push([4, 9, , 10]);
+                        _f.trys.push([4, 11, , 12]);
                         loginForm = new LoginForm_1.default(this, this.url, browser, page);
-                        loginForm.getRelatedFunc();
                         return [4 /*yield*/, sleep(10000)];
                     case 5:
-                        _d.sent();
-                        _b = (_a = console).log;
-                        _c = 'after sleep ';
-                        return [4 /*yield*/, loginForm.getCurrentPage()];
+                        _f.sent();
+                        loginForm.getRelatedFunc();
+                        return [4 /*yield*/, sleep(10000)];
                     case 6:
-                        _b.apply(_a, [_c + (_d.sent())]);
-                        return [4 /*yield*/, page.waitForSelector('text/Customize and automate')];
+                        _f.sent();
+                        _a = MainScreen_1.default.bind;
+                        _b = [void 0, this];
+                        return [4 /*yield*/, loginForm.getCurrentPage()];
                     case 7:
-                        textSelector = _d.sent();
-                        return [4 /*yield*/, (textSelector === null || textSelector === void 0 ? void 0 : textSelector.evaluate(function (el) { return el.textContent; }))];
+                        mainScreen = new (_a.apply(MainScreen_1.default, _b.concat([_f.sent()])))();
+                        mainScreen.getRelatedFunc(page);
+                        sleep(5000);
+                        _d = (_c = console).log;
+                        _e = 'after sleep ';
+                        return [4 /*yield*/, loginForm.getCurrentPage()];
                     case 8:
-                        fullTitle = _d.sent();
-                        console.log('The title of this blog post is "%s".', fullTitle);
-                        return [3 /*break*/, 10];
+                        _d.apply(_c, [_e + (_f.sent())]);
+                        return [4 /*yield*/, page.waitForSelector('text/Customize and automate')];
                     case 9:
-                        error_1 = _d.sent();
-                        console.log(error_1);
-                        return [3 /*break*/, 10];
-                    case 10: return [4 /*yield*/, browser.close()];
+                        textSelector = _f.sent();
+                        return [4 /*yield*/, (textSelector === null || textSelector === void 0 ? void 0 : textSelector.evaluate(function (el) { return el.textContent; }))];
+                    case 10:
+                        fullTitle = _f.sent();
+                        return [3 /*break*/, 12];
                     case 11:
-                        _d.sent();
+                        error_1 = _f.sent();
+                        console.log(error_1);
+                        return [3 /*break*/, 12];
+                    case 12: return [4 /*yield*/, browser.close()];
+                    case 13:
+                        _f.sent();
                         return [2 /*return*/];
                 }
             });
         });
+    };
+    Connection.prototype.getVillageId = function (url) {
+        var urlParams = new URLSearchParams(url);
+        var villageId = urlParams.get("village");
+        return villageId;
     };
     return Connection;
 }());

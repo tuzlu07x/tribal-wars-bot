@@ -52,68 +52,64 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var BaseLogic_1 = require("../BaseLogic");
-var scrapeIt = require("scrape-it");
-var WorldSelection = /** @class */ (function (_super) {
-    __extends(WorldSelection, _super);
-    function WorldSelection(connection, browser) {
+var MainScreen = /** @class */ (function (_super) {
+    __extends(MainScreen, _super);
+    function MainScreen(connection, url) {
         var _this = _super.call(this, connection) || this;
-        _this.browser = browser;
+        _this.url = url;
         return _this;
     }
-    WorldSelection.prototype.getRelatedFunc = function (page) {
+    MainScreen.prototype.getRelatedFunc = function (page) {
         return __awaiter(this, void 0, void 0, function () {
-            var worlds;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.getScrape(page)];
+                    case 0:
+                        if (this.url === null)
+                            console.log('Overview url is null please check getCurrentUrl function');
+                        console.log(this.getVillageId());
+                        return [4 /*yield*/, page.goto(this.newUrl(), { waitUntil: 'networkidle0', timeout: 5000 })];
                     case 1:
-                        worlds = _a.sent();
-                        console.log(worlds);
+                        _a.sent();
+                        return [4 /*yield*/, page.waitForNavigation({ waitUntil: 'networkidle0' })];
+                    case 2:
+                        _a.sent();
                         return [2 /*return*/];
                 }
             });
         });
     };
-    WorldSelection.prototype.worldListHtml = function (page) {
+    MainScreen.prototype.getVillageId = function () {
+        var urlParams = new URLSearchParams(this.url);
+        var villageId = urlParams.get("village");
+        return villageId;
+    };
+    MainScreen.prototype.newUrl = function () {
+        var urlParams = new URLSearchParams(this.url);
+        urlParams.set("screen", "main");
+        var updatedUrl = "https://tr81.klanlar.org/game.php?" + this.getVillageId() + urlParams.toString();
+        return updatedUrl;
+    };
+    MainScreen.prototype.isNullVillageId = function (page) {
         return __awaiter(this, void 0, void 0, function () {
-            var text;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, page.waitForSelector('.worlds-container')];
+                    case 0:
+                        if (!(this.getVillageId() === null)) return [3 /*break*/, 4];
+                        return [4 /*yield*/, page.waitForSelector('.world_button_active')];
                     case 1:
                         _a.sent();
-                        return [4 /*yield*/, page.$eval('.worlds-container', function (e) { return e.innerHTML; })];
+                        return [4 /*yield*/, page.click('.world_button_active')];
                     case 2:
-                        text = _a.sent();
-                        return [2 /*return*/, text];
+                        _a.sent();
+                        return [4 /*yield*/, page.waitForNavigation({ waitUntil: 'networkidle0' })];
+                    case 3:
+                        _a.sent();
+                        _a.label = 4;
+                    case 4: return [2 /*return*/];
                 }
             });
         });
     };
-    WorldSelection.prototype.getScrape = function (page) {
-        return __awaiter(this, void 0, void 0, function () {
-            var htmlContent;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.worldListHtml(page)];
-                    case 1:
-                        htmlContent = _a.sent();
-                        return [4 /*yield*/, scrapeIt.scrapeHTML(htmlContent, {
-                                worlds: {
-                                    listItem: ".world-select",
-                                    data: {
-                                        title: "a span",
-                                        url: {
-                                            attr: "href"
-                                        }
-                                    }
-                                },
-                            })];
-                    case 2: return [2 /*return*/, _a.sent()];
-                }
-            });
-        });
-    };
-    return WorldSelection;
+    return MainScreen;
 }(BaseLogic_1.default));
-exports.default = WorldSelection;
+exports.default = MainScreen;

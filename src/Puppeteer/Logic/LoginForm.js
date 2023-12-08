@@ -161,9 +161,9 @@ var LoginForm = /** @class */ (function (_super) {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        worldSelection = new WoldSelection_1.default(this.connection);
+                        worldSelection = new WoldSelection_1.default(this.connection, this.browser);
                         worldSelection.getRelatedFunc(this.page);
-                        return [4 /*yield*/, this.page.waitForNavigation({ timeout: 6000, waitUntil: 'domcontentloaded' })];
+                        return [4 /*yield*/, this.page.waitForNavigation({ waitUntil: 'domcontentloaded' })];
                     case 1:
                         _a.sent();
                         return [2 /*return*/];
