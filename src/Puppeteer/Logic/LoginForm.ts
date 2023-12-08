@@ -29,7 +29,6 @@ export default class LoginForm extends BaseLogic {
             await this.saveSession();
         }
         await this.worldSelection();
-        this.getCurrentPage()
     }
 
     private async loadSession() {
@@ -56,6 +55,7 @@ export default class LoginForm extends BaseLogic {
 
     private async worldSelection() {
 
+        console.log(this.getCurrentPage())
         const worldSelection = new WorldSelection(this.connection, this.browser);
         worldSelection.getRelatedFunc(this.page);
         await this.page.waitForNavigation({ waitUntil: 'domcontentloaded' });

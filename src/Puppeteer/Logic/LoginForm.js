@@ -95,7 +95,6 @@ var LoginForm = /** @class */ (function (_super) {
                     case 8: return [4 /*yield*/, this.worldSelection()];
                     case 9:
                         _a.sent();
-                        this.getCurrentPage();
                         return [2 /*return*/];
                 }
             });
@@ -164,8 +163,10 @@ var LoginForm = /** @class */ (function (_super) {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
+                        console.log(this.getCurrentPage());
                         worldSelection = new WoldSelection_1.default(this.connection, this.browser);
                         worldSelection.getRelatedFunc(this.page);
+                        console.log(this.getCurrentPage());
                         return [4 /*yield*/, this.page.waitForNavigation({ waitUntil: 'domcontentloaded' })];
                     case 1:
                         _a.sent();
