@@ -1,6 +1,7 @@
+import { Page } from "puppeteer";
 import Agent from "../Puppeteer";
-import BaseModule from "./BaseModule";
 import Window from "../Puppeteer/Window";
+import { TWCredentials } from "../types";
 
 type Events = {
   [key: string]: (() => void)[];
@@ -8,9 +9,10 @@ type Events = {
 
 export default class TWClient {
   protected events: Events;
-  protected loginWindow: Window;
-  constructor(protected agent: Agent, protected credentials: any) {
+  protected loginWindow: Window | null = null;
+  constructor(protected agent: Agent, protected credentials: TWCredentials) {
     this.events = {};
+    this.loginWindow = null
   }
 
   public on(event: string, callback: () => void): void {
@@ -30,24 +32,7 @@ export default class TWClient {
 
   protected async loginIfNotLoggedIn(): Promise<void> {
     if (!this.loginWindow) this.loginWindow = this.agent.newWindow();
-    this.loginWindow.goto(this.credentials.mainUrl);
-    await this.page.waitForSelector(`input[name='username']`);
-    await this.page.type(`input[name='username']`, this.credentials.username);
-
-    await this.page.waitForSelector(`input[name='password']`);
-    await this.page.type(`input[name='password']`, this.credentials.password);
+    this.loginWindow.start(this.credentials)
   }
 
-  private async clickLoginButton() {
-    await this.page.waitForSelector(".btn-login");
-    await this.page.click(".btn-login");
-    if (url === this.credentials.mainUrl) {
-      await page.type("#user", this.credentials.username);
-      await page.type("#password", this.credentials.password);
-      await page.click("#s1");
-      await page.waitForNavigation();
-    }
-    await this.agent.saveSession();
-    this.emit("ready");
-  }
 }

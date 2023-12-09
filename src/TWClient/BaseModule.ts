@@ -1,6 +1,8 @@
 import TWClient from ".";
-import Agent from "../Puppeteer";
 
-export default class BaseModule {
-  constructor(protected client: TWClient) {}
+export default abstract class BaseModule {
+  constructor(protected client: TWClient) { }
+
+  public abstract getRelatedFunc(): Promise<void>;
+
 }
