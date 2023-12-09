@@ -12,4 +12,3 @@ const agent = new Agent("./session.json");
 const client = new TWClient(agent, credentials);
 
 client.start();
-// :
