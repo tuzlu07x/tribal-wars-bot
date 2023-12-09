@@ -5,12 +5,14 @@ const fs = require("fs").promises;
 import WorldSelection from "./WoldSelection";
 
 export default class LoginForm extends BaseLogic {
+  protected worldSelection: WorldSelection;
   protected url: string;
   protected browser: any;
   protected page: any;
 
-  constructor(connection: Connection, url: string, browser: any, page: any) {
+  constructor(connection: Connection, worldSelection: WorldSelection, url: string, browser: any, page: any) {
     super(connection);
+    this.worldSelection = worldSelection
     this.url = url;
     this.browser = browser;
     this.page = page;
@@ -26,7 +28,7 @@ export default class LoginForm extends BaseLogic {
       await this.page.waitForNavigation({ waitUntil: "networkidle0" });
       await this.saveSession();
     }
-    await this.worldSelection();
+    await this.getWorldSelection();
   }
 
   private async loadSession() {
@@ -59,10 +61,9 @@ export default class LoginForm extends BaseLogic {
     await this.page.click(".btn-login");
   }
 
-  private async worldSelection() {
-    console.log(this.getCurrentPage());
-    const worldSelection = new WorldSelection(this.connection, this.browser);
-    worldSelection.getRelatedFunc(this.page);
+  private async getWorldSelection() {
+
+    this.worldSelection.getRelatedFunc(this.page);
     await this.page.waitForNavigation({ waitUntil: "domcontentloaded" });
   }
 

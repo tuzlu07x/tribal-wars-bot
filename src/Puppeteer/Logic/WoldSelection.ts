@@ -3,20 +3,24 @@ import Connection from "../Connection";
 const scrapeIt = require("scrape-it");
 export default class WorldSelection extends BaseLogic {
   protected browser: any;
-  constructor(connection: Connection, browser: any) {
+  protected url: string | null = null;
+
+  constructor(connection: Connection, browser: any, url: string | null = null) {
     super(connection);
     this.browser = browser;
+    this.url = url;
   }
   public async getRelatedFunc(page: any): Promise<void> {
     const worlds = await this.getScrape(page);
-    console.log(worlds);
     for (const item of worlds.worlds) {
       try {
         const newPage = await this.browser.newPage();
-        await newPage.goto("https://www.klanlar.org" + item["url"], {
+        let newUrl = "https://www.klanlar.org" + item["url"];
+        await newPage.goto(newUrl, {
           waitUntil: "load",
-          timeout: 5000,
         });
+        this.getCurrentUrl = newUrl;
+        console.log('url   ' + this.url)
         await page
           .waitForSelector(".world_button_active")
           .then(() => console.log("it should never happened"));
@@ -47,4 +51,14 @@ export default class WorldSelection extends BaseLogic {
     });
     return data;
   }
+
+  public get getCurrentUrl(): string | null {
+
+    return this.url;
+  }
+  public set getCurrentUrl(url: string) {
+
+    this.url = url;
+  }
+
 }

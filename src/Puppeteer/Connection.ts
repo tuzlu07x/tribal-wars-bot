@@ -1,5 +1,5 @@
 import LoginForm from "./Logic/LoginForm";
-import MainScreen from "./Logic/MainScreen";
+import WorldSelection from "./Logic/WoldSelection";
 
 const puppeteerExtra = require("puppeteer-extra");
 const Stealth = require("puppeteer-extra-plugin-stealth");
@@ -39,9 +39,11 @@ export default class Connection {
     const page = await browser.newPage();
     await page.setViewport({ width: 1200, height: 720 });
     try {
-      const loginForm = new LoginForm(this, this.url, browser, page);
+      const worldSelection = new WorldSelection(this, browser)
+      const loginForm = new LoginForm(this, worldSelection, this.url, browser, page);
       await sleep(10000);
       loginForm.getRelatedFunc(), await sleep(10000);
+      console.log('connectopn  ' + worldSelection.getCurrentUrl)
       // const mainScreen = new MainScreen(this, await loginForm.getCurrentPage())
       // mainScreen.getRelatedFunc(page,)
       // sleep(5000)
