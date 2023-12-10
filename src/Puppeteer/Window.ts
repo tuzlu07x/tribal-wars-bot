@@ -7,13 +7,13 @@ export default class Window {
   }
 
   public async start(credentials: TWCredentials) {
-    getLog().info('Hello again distributed logs');
 
     await this.goto(credentials.mainUrl);
-    console.log(await this.isLogin())
+    getLog().info('Main Page added ' + credentials.mainUrl);
     if (!await this.isLogin()) {
-      console.log('dsfdfsdfsfdsdfsdfs')
+      getLog().info('Session doesnt have here');
       await this.auth(credentials.username, credentials.password);
+      getLog().info('Auth worked.');
     }
   }
 
