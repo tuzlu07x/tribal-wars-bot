@@ -1,6 +1,7 @@
 import { TWCredentials } from "./types";
 import Agent from "./Puppeteer";
 import TWClient from "./TWClient";
+import World from "./Puppeteer/World";
 
 const credentials: TWCredentials = {
   mainUrl: "https://www.klanlar.org/",
@@ -9,6 +10,7 @@ const credentials: TWCredentials = {
 };
 
 const agent = new Agent('./session');
-const client = new TWClient(agent, credentials);
+const world = new World(agent);
+const client = new TWClient(agent, world, credentials);
 
 client.start();

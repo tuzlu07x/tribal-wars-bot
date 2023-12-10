@@ -7,8 +7,8 @@ export default class Window {
   }
 
   public async start(credentials: TWCredentials) {
-
     await this.goto(credentials.mainUrl);
+    getLog().info('is Login ' + await this.isLogin())
     getLog().info('Main Page added ' + credentials.mainUrl);
     if (!await this.isLogin()) {
       getLog().info('Session doesnt have here');
