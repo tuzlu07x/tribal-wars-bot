@@ -8,7 +8,7 @@ const credentials: TWCredentials = {
   password: "1234567890",
 };
 
-const agent = new Agent('./session.json');
+const agent = new Agent('./session');
 const client = new TWClient(agent, credentials);
 
 client.start();

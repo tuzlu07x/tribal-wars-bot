@@ -8,16 +8,11 @@ export default class Window {
 
   public async start(credentials: TWCredentials) {
 
-    const page = await this.agent.newPage();
-    try {
-      await this.agent.loadSession()
-      await page.goto(credentials.mainUrl, { waitUntil: "networkidle0" });
-
-    } catch (error) {
-      console.log('anana1')
-      await page.goto(credentials.mainUrl);
+    await this.goto(credentials.mainUrl);
+    console.log(await this.isLogin())
+    if (!await this.isLogin()) {
+      console.log('dsfdfsdfsfdsdfsdfs')
       await this.auth(credentials.username, credentials.password);
-      await this.agent.saveSession();
     }
   }
 
@@ -28,6 +23,11 @@ export default class Window {
     await this.waitForSelector(`input[name='password']`);
     await this.type(`input[name='password']`, password);
     await this.clickLoginButton('btn-login');
+  }
+
+  private async goto(url: string) {
+    const page = await this.agent.newPage();
+    await page.goto(url);
     await this.waitForNavigation({ waitUntil: "networkidle0" })
   }
 
@@ -39,27 +39,38 @@ export default class Window {
 
   private async waitForSelector(name: string): Promise<void> {
 
-    const page = await this.agent.newPage();
+    const page = await this.page;
     await page.waitForSelector(name);
   }
 
   private async type(name: string, signInformation: any): Promise<void> {
 
-    const page = await this.agent.newPage();
+    const page = await this.page;
     await page.type(name, signInformation);
   }
 
   private async click(name: string): Promise<void> {
 
-    const page = await this.agent.newPage();
+    const page = await this.page;
     await page.click(`.${name}`);
 
   }
 
   private async waitForNavigation(name: object): Promise<void> {
 
-    const page = await this.agent.newPage();
-    await page.waitForNavigation(name);
+    const page = await this.page;
+    page.waitForNavigation(name);
 
+  }
+
+  private async isLogin(): Promise<boolean> {
+
+    const page = await this.page;
+    const isLogin = await page.$(`input[name='username']`) === null;
+    return isLogin
+  }
+
+  private get page(): Promise<Page> {
+    return this.agent.newPage();
   }
 }
