@@ -1,12 +1,13 @@
 import { Page } from "puppeteer";
 import Agent from ".";
 import { TWCredentials } from "../types";
-
+import getLog from "../Log"
 export default class Window {
   constructor(protected agent: Agent) {
   }
 
   public async start(credentials: TWCredentials) {
+    getLog().info('Hello again distributed logs');
 
     await this.goto(credentials.mainUrl);
     console.log(await this.isLogin())
@@ -73,4 +74,5 @@ export default class Window {
   private get page(): Promise<Page> {
     return this.agent.newPage();
   }
+
 }
