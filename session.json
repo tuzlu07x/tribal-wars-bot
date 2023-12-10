@@ -1,1 +1,45 @@
-null
+[
+  {
+    "name": "PHPSESSID",
+    "value": "r8d35oibp5sai5v3euhrfqu9ce5167l5bfij7q3bd99rton4",
+    "domain": "www.klanlar.org",
+    "path": "/",
+    "expires": -1,
+    "size": 57,
+    "httpOnly": true,
+    "secure": true,
+    "session": true,
+    "sameSite": "Lax",
+    "sameParty": false,
+    "sourceScheme": "Secure",
+    "sourcePort": 443
+  },
+  {
+    "name": "cid",
+    "value": "1390490005",
+    "domain": ".klanlar.org",
+    "path": "/",
+    "expires": 1733706050.730358,
+    "size": 13,
+    "httpOnly": false,
+    "secure": false,
+    "session": false,
+    "sameParty": false,
+    "sourceScheme": "Secure",
+    "sourcePort": 443
+  },
+  {
+    "name": "ref",
+    "value": "start",
+    "domain": "www.klanlar.org",
+    "path": "/",
+    "expires": -1,
+    "size": 8,
+    "httpOnly": false,
+    "secure": false,
+    "session": true,
+    "sameParty": false,
+    "sourceScheme": "Secure",
+    "sourcePort": 443
+  }
+]

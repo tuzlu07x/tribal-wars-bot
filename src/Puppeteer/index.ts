@@ -1,19 +1,17 @@
-import { Browser, Page, Puppeteer } from "puppeteer";
+import { Browser, Page } from "puppeteer";
+import puppeteerExtra from "puppeteer-extra";
+import Stealth from "puppeteer-extra-plugin-stealth";
+import { readFileSync, writeFileSync, existsSync } from "fs";
 import Window from "./Window";
 
-const puppeteerExtra = require("puppeteer-extra");
-const Stealth = require("puppeteer-extra-plugin-stealth");
 puppeteerExtra.use(Stealth());
-import { readFileSync, writeFileSync } from "fs";
 
 export default class Agent {
   protected _browser: Browser | null = null;
 
-  constructor(protected sessionPath: string | null) {
-  }
+  constructor(protected sessionPath: string | null) { }
 
   public async start() {
-
     if (this._browser) return;
     this._browser = await puppeteerExtra.launch({
       headless: false,
@@ -22,18 +20,18 @@ export default class Agent {
   }
 
   public async loadSession(): Promise<void> {
+    if (!this.sessionPath || !existsSync(this.sessionPath)) return;
 
-    if (!this.sessionPath) return;
     const pages = await this.browser.pages();
     const page: Page = pages[0];
 
     const cookiesString = readFileSync(this.sessionPath).toString();
     const cookies = JSON.parse(cookiesString);
-    page.setCookie(...cookies);
+    console.log(cookies)
+    await page.setCookie(...cookies);
   }
 
   public async saveSession(): Promise<void> {
-
     if (!this.sessionPath) return;
     const pages = await this.browser.pages();
     const page: Page = pages[0];
@@ -41,14 +39,12 @@ export default class Agent {
     writeFileSync(this.sessionPath, JSON.stringify(cookies));
   }
 
-  public newWindow(): Window {
-
-    const window: Window = new Window(this);
+  public newWindow() {
+    const window = new Window(this);
     return window;
   }
 
   public async newPage(number: number = 0): Promise<Page> {
-
     const pages = await this.browser.pages();
     const page: Page = pages[number];
     return page;

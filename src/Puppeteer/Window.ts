@@ -9,9 +9,16 @@ export default class Window {
   public async start(credentials: TWCredentials) {
 
     const page = await this.agent.newPage();
+    // try {
+    //   await this.agent.loadSession()
+    //   await page.goto(credentials.mainUrl, { waitUntil: "networkidle0" });
+
+    // } catch (error) {
+    console.log('anana1')
     await page.goto(credentials.mainUrl);
     await this.auth(credentials.username, credentials.password);
-    console.log('bekliyor')
+    await this.agent.saveSession();
+    // }
   }
 
   private async auth(username: string, password: string): Promise<void> {
