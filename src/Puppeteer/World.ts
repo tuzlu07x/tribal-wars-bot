@@ -5,12 +5,15 @@ const scrapeIt = require("scrape-it");
 
 export default class World extends BaseModule {
     private _page: Page | null = null;
+    private _currentUrl: string[] = [];
+
     constructor(protected agent: Agent) {
         super(agent)
     }
     public async start(): Promise<void> {
         const newPage = await this.agent.newPage()
         this.page = newPage;
+        console.log("3   " + this.page)
         await this.openNewTab()
         await this.waitForNavigation({ waitUntil: "networkidle0" })
     }
@@ -21,12 +24,17 @@ export default class World extends BaseModule {
         for (const item of worlds.worlds) {
             try {
                 const newPage = await this.agent.browser.newPage();
+                this.page = newPage
                 await this.goto(newPage, "https://www.klanlar.org" + item["url"], {
                     waitUntil: "load",
                 });
                 await this
                     .waitForSelector(".world_button_active")
                     .then(() => console.log("it should never happened"));
+
+                const currentUrl = newPage.url();
+                this.currentUrl.push(currentUrl);
+
             } catch (error: any) {
                 console.error(`Error navigating to ${item["url"]}: ${error.message}`);
             }
@@ -72,14 +80,22 @@ export default class World extends BaseModule {
         return data;
     }
 
-    private set page(newPage: Page) {
+    public set page(newPage: Page) {
         this._page = newPage;
     }
 
-    private get page() {
+    public get page() {
         if (!this._page) {
             throw new Error("Page not set. Call setPage to set the page.");
         }
         return this._page;
+    }
+
+    public get currentUrl(): string[] {
+        return this._currentUrl;
+    }
+
+    public set currentUrl(data: string[]) {
+        this._currentUrl = data;
     }
 }
