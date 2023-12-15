@@ -32,17 +32,18 @@ function sleep(ms: number) {
 // }
 // await village.attack('100|100', {spy: 1, sword: 10, mizrak: 10}).process()
 
-const run = async () => {
-
+(async () => {
   const agent = new Agent('./session');
   //const client = new TWClient(agent, credentials);
-  const tribalWars = new TribalWars(agent, credentials)
+  const client = new TribalWars(agent, credentials)
 
-  await tribalWars.login();
+  await client.login();
   await sleep(5000)
-  const world = tribalWars.world('TR')
-  await world.worldNames()
-  console.log(await world.list());
-}
-
-run().catch((error) => console.error(error));
+  const worlds = client.worlds();
+  console.log(worlds);
+  const world = client.world('tr81')
+  await world.run()
+  // const village = world.loadInfo();
+  // await village.run()
+  // console.log(await world.list());
+})().catch((error) => console.error(error));

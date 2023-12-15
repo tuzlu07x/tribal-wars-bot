@@ -6,10 +6,10 @@ export default class Window {
   constructor(protected agent: Agent) {
   }
 
-  protected async goto(url: string) {
+  protected async goto(url: string, object: object = {}) {
 
     const page = await this.agent.newPage();
-    await page.goto(url);
+    await page.goto(url, object);
   }
 
   protected async clickLoginButton(clasName: string): Promise<void> {

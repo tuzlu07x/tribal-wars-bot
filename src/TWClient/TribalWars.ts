@@ -1,6 +1,7 @@
 import World from "../Clans/World";
+import getWorldList from "../Clans/WorldList";
 import Agent from "../Puppeteer/Agent";
-import { TWCredentials } from "../types";
+import { TWCredentials, WorldInfo } from "../types";
 import TWClient from "./TWClient";
 
 export default class TribalWars {
@@ -8,7 +9,7 @@ export default class TribalWars {
 
     constructor(
         protected agent: Agent,
-        protected credentials: TWCredentials
+        protected credentials: TWCredentials,
     ) {
 
     }
@@ -25,10 +26,11 @@ export default class TribalWars {
 
         const twClient = new TWClient(this.agent, this.credentials)
         await twClient.start();
+        await this.loadWorlds()
     }
-}
 
-export type WorldInfo = {
-    name: string,
-    code: string,
+    public async loadWorlds() {
+        const worldList = new getWorldList(this.agent)
+        this._worlds = await worldList.list()
+    }
 }

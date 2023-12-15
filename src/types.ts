@@ -18,3 +18,14 @@ export type Village = {
   warehouse: number;
   population: number;
 };
+
+export type WorldInfo = {
+  name: string,
+  code: string,
+}
+
+export type VillageInfo = {
+  name: string,
+  code: string,
+}
+
