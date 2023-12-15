@@ -43,7 +43,8 @@ function sleep(ms: number) {
   console.log(worlds);
   const world = client.world('tr81')
   await world.run()
-  // const village = world.loadInfo();
-  // await village.run()
-  // console.log(await world.list());
+  await sleep(1000)
+  const village = world.village('overview_villages');
+  await village.run()
+
 })().catch((error) => console.error(error));
