@@ -2,6 +2,7 @@ import { Page } from "puppeteer";
 import Village from "../Clans/Village";
 import VillageList from "../Clans/VillageList";
 import Agent from "../Puppeteer/Agent";
+import { VillageInfo } from "../types";
 export default class World {
     protected _villages: any | null = null
 
@@ -38,13 +39,8 @@ export default class World {
         this._villages = await villageList.list()
     }
 
-    // public villages(): VillageInfo[] {
-    //     return this._villages
-    // }
-
-    // public async loadVillages() {
-    //     const villageList = new OverviewVillages(this.agent, this, 'overview_villages')
-    //     this._villages = await villageList.list()
-    // }
+    public villages(): VillageInfo[] {
+        return this._villages
+    }
 
 } 

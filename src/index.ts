@@ -46,5 +46,7 @@ function sleep(ms: number) {
   await sleep(1000)
   const village = world.village('overview_villages');
   await village.run()
+  const villages = world.villages()
+  console.log(villages)
 
 })().catch((error) => console.error(error));

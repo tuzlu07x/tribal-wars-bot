@@ -13,11 +13,6 @@ export default class Vilage {
     ) {
     }
 
-    // public async list(): Promise<VillageInfo[]> {
-    //     const data: VillageInfo[] = [];
-
-    // }
-
     public async run() {
         try {
             await this.goVillages();
@@ -39,7 +34,7 @@ export default class Vilage {
 
     public async goVillages(): Promise<void> {
         if (!this.world._newPage) throw new Error(`it doesn't work inside Overview this ${this.world.code} and ${this.screen} score`)
-        const page = await this.world._newPage
+        const page = this.world._newPage
 
         await page.goto(`https://${this.world.code}.klanlar.org/game.php?screen=${this.screen}`, {
             waitUntil: "load",
