@@ -1,6 +1,6 @@
 import Agent from "../Puppeteer/Agent";
 import Window from "../Puppeteer/Window";
-import { WorldInfo } from "../types";
+import { VillageInfo } from "../types";
 import World from "./World";
 const cheerio = require('cheerio');
 
@@ -9,18 +9,18 @@ export default class VillageList extends Window {
         super(agent)
     }
 
-    public async list(): Promise<WorldInfo[]> {
+    public async list(): Promise<VillageInfo[]> {
         const villages = await this.getScrape();
-        const data: WorldInfo[] = [];
+        const data: VillageInfo[] = [];
 
         for (const item of villages) {
 
-            const worldData: WorldInfo = {
+            const villageData: VillageInfo = {
                 name: item.name,
                 code: item.id,
             };
 
-            data.push(worldData);
+            data.push(villageData);
         }
 
         return data;
