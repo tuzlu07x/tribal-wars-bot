@@ -29,3 +29,10 @@ export type VillageInfo = {
   code: string,
 }
 
+export type VillageProductionInfo = {
+  wood: number,
+  clay: number
+  iron: number
+}
+
+

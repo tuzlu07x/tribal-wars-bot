@@ -10,7 +10,7 @@ export default class VillageList extends Window {
     }
 
     public async list(): Promise<VillageInfo[]> {
-        const villages = await this.getScrape();
+        const villages = await this.villageListFormat();
         const data: VillageInfo[] = [];
 
         for (const item of villages) {
@@ -26,8 +26,8 @@ export default class VillageList extends Window {
         return data;
     }
 
-    private async getScrape(): Promise<any> {
-        const htmlContent = await this.worldListHtml();
+    private async villageListFormat(): Promise<any> {
+        const htmlContent = await this.villageListHtml();
         const $ = cheerio.load(htmlContent);
 
         const villages: { id: string, name: string }[] = [];
@@ -45,7 +45,7 @@ export default class VillageList extends Window {
     }
 
 
-    private async worldListHtml() {
+    private async villageListHtml() {
         await new Promise((resolve) => setTimeout(resolve, 5000));
         if (!this.world._newPage) throw new Error('in Village List');
         const newPage = this.world._newPage;

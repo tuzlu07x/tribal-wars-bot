@@ -30,8 +30,8 @@ export default class World {
         }
     }
 
-    public village(screen: string): Village {
-        return new Village(this.agent, this, screen)
+    public village(): Village {
+        return new Village(this.agent, this)
     }
 
     public async loadVillage() {
@@ -42,5 +42,4 @@ export default class World {
     public villages(): VillageInfo[] {
         return this._villages
     }
-
 } 
