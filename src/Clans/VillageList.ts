@@ -1,63 +1,60 @@
 import Agent from "../Puppeteer/Agent";
 import Window from "../Puppeteer/Window";
-import { VillageInfo, WorldInfo } from "../types";
+import { WorldInfo } from "../types";
 import World from "./World";
-const scrapeIt = require("scrape-it");
+const cheerio = require('cheerio');
 
 export default class VillageList extends Window {
     constructor(protected agent: Agent, protected world: World) {
         super(agent)
     }
 
-    public async list() {
-        console.log(await this.getScrape())
-        //const worlds = await this.getScrape();
-        // const data: WorldInfo[] = [];
+    public async list(): Promise<WorldInfo[]> {
+        const villages = await this.getScrape();
+        const data: WorldInfo[] = [];
 
-        // for (const item of worlds.worlds) {
-        //     let parts = item['url'].split('/');
-        //     let code = parts[parts.length - 1];
+        for (const item of villages) {
 
-        //     const worldData: WorldInfo = {
-        //         name: item['title'],
-        //         code: code,
-        //     };
+            const worldData: WorldInfo = {
+                name: item.name,
+                code: item.id,
+            };
 
-        //     data.push(worldData);
-        // }
-        // return data;
+            data.push(worldData);
+        }
+
+        return data;
     }
 
     private async getScrape(): Promise<any> {
-        console.log(1)
-        const htmlContent = this.worldListHtml();
-        console.log(2)
-        const data = scrapeIt.scrapeHTML(htmlContent)
-        console.log(3)
-        return data
-        // const data = scrapeIt.scrapeHTML(htmlContent, {
-        //     worlds: {
-        //         listItem: ".world-select",
-        //         data: {
-        //             title: "a span",
-        //             url: {
-        //                 attr: "href",
-        //             },
-        //         },
-        //     },
-        // });
-        // return data;
+        const htmlContent = await this.worldListHtml();
+        const $ = cheerio.load(htmlContent);
+
+        const villages: { id: string, name: string }[] = [];
+
+        $('.quickedit-vn').each((index: any, element: any) => {
+            const villageId = $(element).attr('data-id');
+            const villageName = $(element).find('a > span').attr('data-text');
+
+            if (villageId && villageName) {
+                villages.push({ id: villageId, name: villageName });
+            }
+        });
+
+        return villages;
     }
 
-    private async worldListHtml(): Promise<string> {
 
-        const newPage = await this.page;
-        console.log(4)
-        await newPage.waitForSelector(".nowrap selected  row_a")
-        console.log(5)
-        const text = await newPage.$eval(".nowrap selected  row_a", (e: any) => e.innerHTML);
-        console.log(6)
-        this.waitForNavigation({ waitUntil: "networkidle0" });
+    private async worldListHtml() {
+        await new Promise((resolve) => setTimeout(resolve, 5000));
+        if (!this.world._newPage) throw new Error('in Village List');
+        const newPage = this.world._newPage;
+        newPage.waitForSelector("#production_table");
+        const text = await newPage.$eval("#production_table", (e: any) => e.innerHTML);
+        newPage.waitForNavigation({ waitUntil: "networkidle0" });
+
         return text;
     }
+
+
 }
